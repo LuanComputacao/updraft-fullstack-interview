@@ -1,0 +1,49 @@
+services:
+  updraft-interview-database:
+    container_name: updraft_interview_db_dev
+    image: postgres:15.1
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_NON_ROOT_USER: db-user
+      POSTGRES_NON_ROOT_USER_PASSWORD: password
+      POSTGRES_MULTIPLE_DATABASES: updraft-interview
+    volumes:
+      - updraft_interview_pg_db:/var/lib/postgresql/data
+      - ./database/init-scripts:/docker-entrypoint-initdb.d
+      - ./database/scripts:/usr/app
+    ports:
+      - "5445:5432"
+
+  updraft-interview-backend:
+    container_name: updraft_interview_backend_dev
+    build:
+      context: ./backend
+      target: development
+    image: updraft-interview-backend
+    env_file:
+      - ./backend/.env
+    ports:
+      - '3003:3003'
+    volumes:
+      - ./backend:/usr/app
+    command: ./scripts/run-dev.sh
+
+  updraft-interview-nginx:
+    image: updraft-interview-nginx
+    container_name: updraft_interview_nginx_dev
+    build:
+      context: ./nginx
+      target: development
+    ports:
+      - "8090:80"
+
+volumes:
+  updraft_interview_pg_db:
+
+networks:
+  default:
+    name: updraft-interview-network
+    ipam:
+      config:
+        - subnet: ${NETWORK_SUBNET:-172.20.0.0/16}

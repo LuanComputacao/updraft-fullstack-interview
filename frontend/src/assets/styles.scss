@@ -1,0 +1,16 @@
+/* General */
+$gutter: 1rem; /* for primeflex grid system */
+$scale: 14px; /* main font size */
+$borderRadius: 14px; /* border radius of layout element e.g. card, sidebar */
+$transitionDuration: 0.2s; /* transition duration of layout elements e.g. sidebar, overlay menus */
+
+@import './layout/styles/layout/layout.scss';
+
+
+/* PrimeVue */
+@import 'primeflex/primeflex.css';
+@import 'primeicons/primeicons.css';
+@import 'primevue/resources/primevue.min.css';
+@import 'primevue/resources/themes/soho-light/theme.css';
+@import './custom_theme.css';
+// @import 'primevue/resources/themes/lara-dark-indigo/theme.css';

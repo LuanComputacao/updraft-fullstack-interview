@@ -1,0 +1,14 @@
+__pycache__
+node_modules
+3.9
+bin
+lib
+lib64
+pyvenv.cfg
+.venv
+.serverless
+profiler
+.vscode
+.coverage
+.isort.cfg
+.idea
