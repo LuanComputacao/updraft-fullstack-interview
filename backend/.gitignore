@@ -12,3 +12,4 @@ profiler
 .coverage
 .isort.cfg
 .idea
+.env

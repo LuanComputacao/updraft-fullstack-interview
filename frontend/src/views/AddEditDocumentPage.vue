@@ -11,12 +11,17 @@
       />
       <h1>{{ isEditMode ? 'Edit Document' : 'Create Document' }}</h1>
     </div>
-    <div class="flex w-full bg-white p-3 shadow-2 border-round">
-      <DocumentForm
-        :document-id="documentId"
-        :is-edit-mode="isEditMode"
-        @created="onDocumentCreated"
-      />
+    <div class="flex w-full gap-3">
+      <div class="flex-1 bg-white p-3 shadow-2 border-round">
+        <DocumentForm
+          :document-id="documentId"
+          :is-edit-mode="isEditMode"
+          @created="onDocumentCreated"
+        />
+      </div>
+      <div v-if="isEditMode" class="bg-white p-3 shadow-2 border-round">
+        <SummaryPanel :document-id="documentId" />
+      </div>
     </div>
   </div>
 </template>
@@ -27,6 +32,7 @@ import { computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import DocumentForm from '@/components/documents/DocumentForm.vue';
+import SummaryPanel from '@/components/documents/SummaryPanel.vue';
 
 const route = useRoute();
 const router = useRouter();

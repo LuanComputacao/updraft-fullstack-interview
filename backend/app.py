@@ -5,23 +5,30 @@ from typing import List
 from uuid import uuid4
 from components.shared.infrastructure.os import env
 from components.shared.user_interface.http_api.http_error_mappers import (
-    register_error_handlers, ErrorToHandlerMap, get_error_to_handler_mappers
+    register_error_handlers,
+    ErrorToHandlerMap,
+    get_error_to_handler_mappers,
 )
-from components.documents.infrastructure.orm import start_mappers as start_documents_mappers
+from components.documents.infrastructure.orm import (
+    start_mappers as start_documents_mappers,
+)
 from components.documents.user_interface.http.documents_api import documents_blueprint
+from components.summary.user_interface.http.summary_api import summary_blueprint
 
 from components.shared.infrastructure.logger import logger
 from components.shared.infrastructure.tenant import (
     set_current_tenant,
     get_tenant_from_http_request,
-    get_tenant_from_path
+    get_tenant_from_path,
 )
 
 IS_DEV = env.bool("IS_LOCAL_ENV", False)
 
+
 def register_blueprints(flask_app: Flask):
     logger.info("registering blueprint")
     flask_app.register_blueprint(documents_blueprint)
+    flask_app.register_blueprint(summary_blueprint)
     logger.info("successfully registered blueprints")
 
 
@@ -42,14 +49,12 @@ def set_cors(flask_app: Flask) -> Flask:
 
     return flask_app
 
+
 def set_compression(flask_app: Flask) -> Flask:
-    flask_app.config.from_mapping({
-        "COMPRESS_ALGORITHM": ['br', 'gzip']
-    })
+    flask_app.config.from_mapping({"COMPRESS_ALGORITHM": ["br", "gzip"]})
     compress = Compress()
     compress.init_app(app=flask_app)
     return flask_app
-
 
 
 def start_mappers() -> None:
@@ -60,16 +65,16 @@ def create_app(
     import_name: str,
     auto_load_blueprints: bool = True,
 ) -> Flask:
-    flask_app = Flask(
-        import_name
-    )
+    flask_app = Flask(import_name)
 
     if auto_load_blueprints:
         register_blueprints(flask_app)
 
     start_mappers()
 
-    flask_app = register_error_handlers(flask_app, get_error_to_handler_map_registries())
+    flask_app = register_error_handlers(
+        flask_app, get_error_to_handler_map_registries()
+    )
 
     flask_app = set_middlewares(flask_app)
     flask_app = set_cors(flask_app)

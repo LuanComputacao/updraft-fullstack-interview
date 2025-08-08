@@ -1,0 +1,12 @@
+# Environment variables
+.env
+backend/.env
+frontend/.env
+
+# Editor and IDE files
+.idea
+.vscode
+.github
+*.sublime-project
+*.sublime-workspace
+*.swp
