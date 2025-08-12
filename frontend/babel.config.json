@@ -1,4 +1,1 @@
-{ "presets": [
-  ["@babel/preset-env", {"targets": "ES2021"}]
-]
-}
+{ "presets": [["@babel/preset-env", { "targets": "ES2021" }]] }
