@@ -1,9 +1,8 @@
-from logging.config import fileConfig
 import os
-from sqlalchemy import engine_from_config
-from sqlalchemy import pool
+from logging.config import fileConfig
 
 from alembic import context
+from sqlalchemy import engine_from_config, pool
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -18,7 +17,10 @@ if config.config_file_name is not None:
 
 # Custom code: get db url from db.py
 if is_dev:
-    config.set_main_option('sqlalchemy.url', "postgresql://root:root@updraft-interview-database:5432/updraft-interview")
+    config.set_main_option(
+        "sqlalchemy.url",
+        "postgresql://root:root@updraft-interview-database:5432/updraft-interview",
+    )
 
 # add your model's MetaData object here
 # for 'autogenerate' support
@@ -26,6 +28,7 @@ if is_dev:
 # target_metadata = mymodel.Base.metadata
 
 from components.documents.infrastructure.orm import metadata as documents_metadata
+
 target_metadata = [documents_metadata]
 
 # other values from the config, defined by the needs of env.py,
@@ -72,9 +75,7 @@ def run_migrations_online() -> None:
     )
 
     with connectable.connect() as connection:
-        context.configure(
-            connection=connection, target_metadata=target_metadata
-        )
+        context.configure(connection=connection, target_metadata=target_metadata)
 
         with context.begin_transaction():
             context.run_migrations()

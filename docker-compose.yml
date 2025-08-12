@@ -1,6 +1,6 @@
 services:
-  updraft-interview-database:
-    container_name: updraft_interview_db_dev
+  database:
+    container_name: db_dev
     image: postgres:15.1
     environment:
       POSTGRES_USER: root
@@ -14,36 +14,62 @@ services:
       - ./database/scripts:/usr/app
     ports:
       - "5445:5432"
+    networks:
+      - updraft
 
-  updraft-interview-backend:
-    container_name: updraft_interview_backend_dev
+  backend:
+    container_name: backend_dev
     build:
       context: ./backend
       target: development
-    image: updraft-interview-backend
+    image: backend
     env_file:
       - ./backend/.env
     ports:
-      - '3003:3003'
+      - "3003:3003"
     volumes:
       - ./backend:/usr/app
     command: ./scripts/run-dev.sh
+    networks:
+      - updraft
 
-  updraft-interview-nginx:
-    image: updraft-interview-nginx
-    container_name: updraft_interview_nginx_dev
+  frontend:
+    container_name: frontend_dev
+    build:
+      context: ./frontend
+      target: development
+    image: frontend
+    environment:
+      - NODE_ENV=development
+    ports:
+      - "5180:5180" # expose Vite port externally
+    volumes:
+      - ./frontend:/usr/src/app
+      - /usr/src/app/node_modules
+    networks:
+      - updraft
+
+  nginx:
+    image: nginx
+    container_name: nginx_dev
     build:
       context: ./nginx
       target: development
+    environment:
+      - FRONTEND_HOST=frontend:5180
+      - API_HOST=backend:3003
+    depends_on:
+      - frontend
+      - backend
     ports:
       - "8090:80"
+    networks:
+      - updraft
 
 volumes:
   updraft_interview_pg_db:
 
 networks:
-  default:
-    name: updraft-interview-network
-    ipam:
-      config:
-        - subnet: ${NETWORK_SUBNET:-172.20.0.0/16}
+  updraft:
+    name: updraft
+    driver: bridge

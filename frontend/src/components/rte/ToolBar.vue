@@ -12,6 +12,7 @@
     </div>
   </div>
 </template>
+
 <script setup>
 import { Editor } from '@tiptap/vue-3';
 import { computed, defineProps, provide } from 'vue';

@@ -57,7 +57,7 @@ import { Field, Form } from 'vee-validate';
 import { defineEmits, defineProps, onMounted, ref, watch } from 'vue';
 import { object, string } from 'yup';
 
-import { useDocumentsStore } from '@/services/stores/documents';
+import { useDocumentsStore } from '@/stores/documents';
 
 import RichTextEditor from '../rte/RichTextEditor.vue';
 
@@ -100,7 +100,7 @@ const loadDocument = async () => {
   if (props.isEditMode && props.documentId) {
     isLoading.value = true;
     try {
-      const document = await documentsStore.fetchSingleDocument(props.documentId);
+      const document = await documentsStore.fetchById(props.documentId);
       if (document) {
         form.value = {
           title: document.title,
@@ -130,7 +130,7 @@ const onSubmit = async () => {
 
   try {
     if (props.isEditMode) {
-      const result = await documentsStore.updateDocument(
+      const result = await documentsStore.update(
         props.documentId,
         form.value.title,
         form.value.content_html
@@ -153,7 +153,7 @@ const onSubmit = async () => {
         });
       }
     } else {
-      const result = await documentsStore.addDocument(form.value.title, form.value.content_html);
+      const result = await documentsStore.create(form.value.title, form.value.content_html);
 
       if (result.success) {
         toast.add({

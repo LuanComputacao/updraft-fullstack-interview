@@ -74,12 +74,12 @@ import { useConfirm } from 'primevue/useconfirm';
 import { useToast } from 'primevue/usetoast';
 import { defineEmits, onMounted, ref } from 'vue';
 
-import { useDocumentsStore } from '@/services/stores/documents';
+import { useDocumentsStore } from '@/stores/documents';
 
 const emit = defineEmits(['edit']);
 
 const documentsStore = useDocumentsStore();
-const { documents, isLoading } = storeToRefs(documentsStore);
+const { documentsList: documents, isLoading } = storeToRefs(documentsStore);
 
 const filters = ref({
   global: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -111,7 +111,7 @@ const onDelete = (document) => {
     acceptClass: 'p-button-danger',
     accept: async () => {
       try {
-        const result = await documentsStore.softDeleteDocument(document.id);
+        const result = await documentsStore.softDelete(document.id);
 
         if (result.success) {
           toast.add({
@@ -141,6 +141,6 @@ const onDelete = (document) => {
 };
 
 onMounted(() => {
-  documentsStore.fetchDocuments();
+  documentsStore.fetchCollection();
 });
 </script>

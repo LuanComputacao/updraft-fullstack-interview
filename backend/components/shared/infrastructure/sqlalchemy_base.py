@@ -63,7 +63,7 @@ class SqlAlchemyUnitOfWork(UnitOfWorkInterface):
         self,
         session_factory: Callable[[], Session] = DEFAULT_SESSION_MAKER,
         logger: LoggerInterface = logger,  # @todo remove
-        **kwargs: Type[SQLAlchemyAbstractRepository]
+        **kwargs: Type[SQLAlchemyAbstractRepository],
     ):
         self._session_factory = session_factory
         self.logger = logger

@@ -1,0 +1,16 @@
+{
+  "name": "Updraft Interview App",
+  "short_name": "Updraft",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1e88e5",
+  "description": "Document editing and AI summarization platform.",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    }
+  ]
+}

@@ -1,5 +1,6 @@
 from typing import Optional
 
+
 class DomainError(RuntimeError):
     message = (
         "There was an unexpected business error, if this error persist contact support."

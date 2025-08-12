@@ -8,6 +8,7 @@ from sqlalchemy import (
     MetaData,
     String,
     Table,
+    Text,
 )
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import registry
@@ -26,6 +27,7 @@ document_table = Table(
     ),
     Column("title", String(length=255), nullable=False),
     Column("content_html", String, nullable=False),
+    Column("summary_html", Text, nullable=True),
     Column("created_at", DateTime, nullable=False),
     Column("archived_at", DateTime, nullable=True),
     Index("idx_documents_id_search", "id"),
