@@ -1,58 +1,58 @@
 # Updraft Fullstack Interview Project
 
-## Visão Geral
+## Overview
 
-Plataforma multi-tenant para edição e sumarização de documentos, composta por backend Flask (Python) e frontend Vue 3 (Vite), orquestrados via Docker. Persistência em PostgreSQL, proxy reverso com Nginx.
+Multi-tenant platform for document editing and AI summarization, composed of a Flask (Python) backend and a Vue 3 (Vite) frontend, orchestrated via Docker. Persistence in PostgreSQL, reverse proxy with Nginx.
 
-- **Backend:** Flask, arquitetura em camadas (Cosmic Python), comandos Pydantic, serviços transacionais, repositórios SQLAlchemy, DTOs Marshmallow, multi-tenant por hostname.
-- **Frontend:** Vue 3 + PrimeVue, editor TipTap, painel lateral para sumário AI, consumo de streaming via Fetch/SSE.
-- **Infra:** Docker Compose, Nginx, PostgreSQL.
+- **Backend:** Flask, layered (Cosmic Python) architecture, Pydantic command objects, transactional services, SQLAlchemy repositories, Marshmallow DTOs, multi-tenant by hostname.
+- **Frontend:** Vue 3 + PrimeVue, TipTap editor, side panel for AI summary, streaming consumption via Fetch/SSE.
+- **Infrastructure:** Docker Compose, Nginx, PostgreSQL.
 
-## Como rodar
+## How to Run
 
-Pré-requisitos: Docker, Docker Compose, Node 18+, pnpm
+Prerequisites: Docker, Docker Compose, Node 18+, pnpm
 
 ```sh
 docker compose up -d
-# Aplique as migrations do banco conforme instruções em docs/DEVELOPMENT.md
+# Apply database migrations as described in docs/DEVELOPMENT.md
 ```
 
-- Backend: http://localhost:3003 (interno: backend:3003)
-- Frontend: http://localhost:5180 (interno: frontend:5180)
+- Backend: http://localhost:3003 (internal: backend:3003)
+- Frontend: http://localhost:5180 (internal: frontend:5180)
 - Nginx (proxy): http://localdev.localhost:8090
 
-## Estrutura do Projeto
+## Project Structure
 
-- `backend/components/` — domínio, aplicação, infraestrutura, user_interface
-- `frontend/src/` — serviços, componentes, views
-- `docs/` — arquitetura, desenvolvimento, UX
+- `backend/components/` — domain, application, infrastructure, user_interface
+- `frontend/src/` — services, components, views
+- `docs/` — architecture, development, UX
 
-## Documentos e Sumário AI
+## Documents and AI Summary
 
-- CRUD de documentos: `/api/documents`
-- Sumário AI: `/api/documents/<id>/summary` (persistência), `/stream` (SSE streaming)
-- Geração, edição, atualização e deleção de sumários via painel lateral no frontend
+- Documents CRUD: `/api/documents`
+- AI Summary: `/api/documents/<id>/summary` (persistence), `/stream` (SSE streaming)
+- Generate, edit, update and delete summaries via the side panel in the frontend
 
 ## Multi-Tenant
 
-- Tenant derivado do subdomínio (ex: `localdev.localhost`)
-- Header `X-Updraft-Tenant` para requests backend
+- Tenant derived from subdomain (e.g. `localdev.localhost`)
+- Header `X-Updraft-Tenant` required in backend requests
 
-## Variáveis de Ambiente
+## Environment Variables
 
-Veja `backend/.env.sample` e docs/DEVELOPMENT.md para detalhes de configuração de LLM e secrets.
+See `backend/.env.sample` and `docs/DEVELOPMENT.md` for LLM and secrets configuration details.
 
-## Testes e QA
+## Tests and QA
 
-- Smoke: criar documento, gerar sumário, salvar, editar, deletar
-- Edge: documentos longos, tenant ausente, falha do provider, reconexão SSE
+- Smoke: create document, generate summary, save, edit, delete
+- Edge: long documents, missing tenant, provider failure, SSE reconnection
 
-## Documentação
+## Documentation
 
-- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — visão técnica e decisões
-- [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) — instruções de desenvolvimento
-- [docs/UX.md](docs/UX.md) — diretrizes de UX e microinterações
+- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — technical view and decisions
+- [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) — development instructions
+- [docs/UX.md](docs/UX.md) — UX guidelines and micro-interactions
 
 ---
 
-Se quiser um README mais detalhado ou com exemplos de uso de API, posso complementar!
+If you want a more detailed README or API usage examples, just ask!

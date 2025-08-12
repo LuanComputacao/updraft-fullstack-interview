@@ -5,110 +5,110 @@ Contributors: Sally (UX), Winston (Architect), James (Dev)
 
 ## Sprint Goal
 
-Entregar geração de resumo com streaming e capacidade de salvar/editar/deletar no editor de documentos.
+Deliver summary generation with streaming and ability to save/edit/delete inside the document editor.
 
 ## Epics
 
-- UX: Painel de resumo com TipTap e streaming
-- Backend: API de geração e persistência
-- Infra/DevEx: chaves de IA, migrações, observabilidade
+- UX: Summary panel with TipTap and streaming
+- Backend: Generation & persistence API
+- Infra/DevEx: AI keys, migrations, observability
 
 ## User Stories
 
-1. Como usuário, posso gerar um resumo via IA a partir de um documento (streaming)
-2. Como usuário, posso salvar o resumo como resumo oficial do documento
-3. Como usuário, posso editar o resumo gerado
-4. Como usuário, posso deletar o resumo
-5. Como usuário, vejo o texto chegando em tempo real enquanto a IA gera o resumo
+1. As a user, I can generate a summary via AI from a document (streaming)
+2. As a user, I can save the summary as the official document summary
+3. As a user, I can edit the generated summary
+4. As a user, I can delete the summary
+5. As a user, I see text arriving in real time while AI generates the summary
 
 ## Acceptance Criteria (Gherkin)
 
-- Ver DEVELOPMENT.md e UX.md para detalhes; critérios serão vinculados a cada story no board.
+- See DEVELOPMENT.md and UX.md for details; criteria will be linked to each story on the board.
 
-## Tasks por Área
+## Tasks by Area
 
 ### Sally (UX)
 
-- [x] Wireframe do painel lateral "AI Summary" com estados (idle, generating, ready, error)
-- [x] Especificar microinterações (spinner, typewriter, cancelar)
-- [x] Acessibilidade: ARIA live region, foco, atalhos
-- [x] Empty/Loading/Error copy e diretrizes de tom
+- [x] Wireframe for side panel "AI Summary" with states (idle, generating, ready, error)
+- [x] Specify micro-interactions (spinner, typewriter, cancel)
+- [x] Accessibility: ARIA live region, focus, shortcuts
+- [x] Empty/Loading/Error copy and tone guidelines
 
 ### Winston (Architecture)
 
-- [x] Decidir contrato de streaming (SSE vs chunked) e padronizar eventos
-- [x] Definir modelo de dados (coluna summary em documents vs tabela summaries)
-- [x] Planejar migração Alembic e mapeamentos ORM
-- [x] Definir interface de provedor de IA
-- [x] Estratégia de segredos por tenant (baseline via SecretsManager; docs pendentes)
+- [x] Decide streaming contract (SSE vs chunked) and standardize events
+- [x] Define data model (summary column in documents vs summaries table)
+- [x] Plan Alembic migration and ORM mappings
+- [x] Define AI provider interface
+- [x] Strategy for secrets per tenant (baseline via SecretsManager; docs pending)
 
-#### Diretrizes para stores (Pinia)
+#### Guidelines for stores (Pinia)
 
-- [ ] Definir políticas de cache/TTL, invalidação e normalização por domínio
-- [ ] Padrões de selectors e separação de responsabilidades (API fina, store orquestra, componente "burro")
-- [ ] Convenções de estados/erros (in-flight counter, shape de `error`), logs e telemetria (opcional)
+- [ ] Define cache/TTL, invalidation and normalization per domain
+- [ ] Patterns for selectors and separation of responsibilities (thin API, store orchestrates, dumb component)
+- [ ] Conventions for states/errors (in-flight counter, shape of `error`), logs & telemetry (optional)
 
 ### James (Dev – Backend)
 
-- [x] Criar componente `summary` com domain/application/infrastructure/user_interface
-- [x] Endpoints HTTP:
+- [x] Create `summary` component with domain/application/infrastructure/user_interface
+- [x] HTTP endpoints:
   - [x] POST `/api/documents/<id>/summary/stream` (SSE)
   - [x] GET `/api/documents/<id>/summary`
   - [x] POST `/api/documents/<id>/summary`
   - [x] PUT `/api/documents/<id>/summary`
   - [x] DELETE `/api/documents/<id>/summary`
-- [x] Commands/Handlers/Service para salvar/atualizar/deletar
-- [x] View/DTO para leitura de resumo
-- [x] Integração com provedor IA (mock inicial + real depois)
-- [x] Logs estruturados + timeouts; propagar X-Request-Id
-- [x] Centralizar prompts do summary em módulo dedicado
-- [x] Suporte ao cliente `google-genai` com fallback para `google-generativeai`
-- [ ] Testes manuais: long docs, erros do provedor, tenant ausente (iniciado)
-- [x] Retries/backoff no provider; timeouts configuráveis por env
-- [x] Mapear erros do provedor -> SSE `event:error` e mensagens claras
+- [x] Commands/Handlers/Service to save/update/delete
+- [x] View/DTO for summary read
+- [x] Integration with AI provider (initial mock + real later)
+- [x] Structured logs + timeouts; propagate X-Request-Id
+- [x] Centralize summary prompts in dedicated module
+- [x] Support `google-genai` client with fallback to `google-generativeai`
+- [ ] Manual tests: long docs, provider errors, missing tenant (started)
+- [x] Retries/backoff in provider; timeouts configurable via env
+- [x] Map provider errors -> SSE `event:error` with clear messages
 
 ### James (Dev – Frontend)
 
-- [x] Serviço `summaryService` com fetch streaming (ReadableStream/SSE)
-- [x] Componente `SummaryPanel.vue` integrado ao TipTap
-- [x] Estados de UI (idle/generating/ready/error) e ações (Generate/Save/Update/Delete)
-- [x] Persistência do resumo no documento selecionado
-- [x] Tratamento de reconexão e cancelamento do stream
+- [x] `summaryService` with streaming fetch (ReadableStream/SSE)
+- [x] `SummaryPanel.vue` component integrated with TipTap
+- [x] UI states (idle/generating/ready/error) and actions (Generate/Save/Update/Delete)
+- [x] Summary persistence in selected document
+- [x] Handling stream reconnection and cancellation
 
-#### Pinia (melhorias)
+#### Pinia (improvements)
 
-- [ ] Reorganizar stores em `src/stores/` (mover de `services/stores/`); um módulo por domínio (documents, summary, ui)
-- [ ] Documents store normalizado: state `{ byId, allIds, isLoading, error, lastFetchedAt }`; getters `documentsList`, `documentMap`, `documentById(id)`, `count`
-- [ ] Actions `fetchCollection({ force, signal })`, `fetchById(id)`, `create`, `update`, `softDelete`, `clear` usando `$patch` e atualizações otimizadas
-- [ ] De-duplicar requisições concorrentes e suportar cancelamento com `AbortController`
-- [ ] Centralizar erros e toasts; trocar `isLoading` boolean por contador por ação ou flags por ação
-- [ ] Router guards: prefetch na entrada da rota de edição/lista; cancelar requisições na saída
-- [ ] Summary store: gerenciar streaming (`isGenerating`, `error`, `requestId`, `generatedHtml`); mover SSE do componente para a store; ações `startStream/cancel/save/update/delete` com retry/backoff alinhado
-- [ ] Resetar stores ao trocar tenant (`store.$reset`) e invalidar cache (TTL)
-- [ ] Plugins Pinia (logger, persistedstate) e tipagem (JSDoc/TypeScript) para melhor DX
-- [ ] Testes básicos de stores com mocks do API (fetch/create/update/delete)
-- [ ] Documentar padrões de stores em `DEVELOPMENT.md` (estrutura, normalização, selectors, erros)
+- [ ] Reorganize stores into `src/stores/` (move from `services/stores/`); one module per domain (documents, summary, ui)
+- [ ] Documents store normalized: state `{ byId, allIds, isLoading, error, lastFetchedAt }`; getters `documentsList`, `documentMap`, `documentById(id)`, `count`
+- [ ] Actions `fetchCollection({ force, signal })`, `fetchById(id)`, `create`, `update`, `softDelete`, `clear` using `$patch` and optimized updates
+- [ ] De-duplicate concurrent requests and support cancellation with `AbortController`
+- [ ] Centralize errors and toasts; replace boolean `isLoading` with counter per action or flags per action
+- [ ] Router guards: prefetch on entering edit/list route; cancel requests on leave
+- [ ] Summary store: manage streaming (`isGenerating`, `error`, `requestId`, `generatedHtml`); move SSE from component to store; actions `startStream/cancel/save/update/delete` with retry/backoff alignment
+- [ ] Reset stores when tenant changes (`store.$reset`) and invalidate cache (TTL)
+- [ ] Pinia plugins (logger, persistedstate) and typing (JSDoc/TypeScript) for better DX
+- [ ] Basic store tests with mocked API (fetch/create/update/delete)
+- [ ] Document store patterns in `DEVELOPMENT.md` (structure, normalization, selectors, errors)
 
 ### Infra/DevEx
 
-- [x] Variáveis de ambiente para chaves (OpenAI/Gemini) e limites
-- [ ] Docker/compose: propagar segredos com segurança
-- [x] Alembic: criar migração e aplicar
-- [ ] Observabilidade: logs no backend, mensagens claras no frontend
-- [x] Script de teste do cliente `google-genai` (ad-hoc)
-- [x] Documentar envs no README/DEVELOPMENT e adicionar `.env.sample`
-- [x] Documentar SSE/Nginx e cabeçalho `X-Updraft-Tenant`
+- [x] Environment variables for keys (OpenAI/Gemini) and limits
+- [ ] Docker/compose: propagate secrets securely
+- [x] Alembic: create migration and apply
+- [ ] Observability: backend logs, clear frontend messages
+- [x] Test script for `google-genai` client (ad-hoc)
+- [x] Document envs in README/DEVELOPMENT and add `.env.sample`
+- [x] Document SSE/Nginx and `X-Updraft-Tenant` header
 
 ## Definition of Done
 
-- Endpoints funcionam e documentados no README/DEVELOPMENT
-- Streaming visível na UI e cancelável
-- Resumo salvo/editável/deletável
-- Sem erros no console; CORS/Compress configurados
-- Migrações aplicadas; build Docker ok
+- Endpoints working and documented in README/DEVELOPMENT
+- Streaming visible in UI and cancelable
+- Summary saved/editable/deletable
+- No console errors; CORS/Compression configured
+- Migrations applied; Docker build OK
 
-## Riscos
+## Risks
 
-- Limites de tokens e custos da IA
-- Reconexões SSE sob proxies
-- Latência para documentos grandes
+- AI token limits and costs
+- SSE reconnections under proxies
+- Latency for large documents

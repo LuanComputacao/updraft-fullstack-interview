@@ -1,15 +1,15 @@
-# Documentação do Projeto
+# Project Documentation
 
-Bem-vindo à pasta de documentação. Produzida por:
+Welcome to the documentation folder. Produced by:
 
 - Winston (Architect)
 - James (Dev)
 - Sally (UX Expert)
 
-Arquivos:
+Files:
 
-- [ARCHITECTURE.md](./ARCHITECTURE.md) — visão de arquitetura e planos para a feature de resumo
-- [DEVELOPMENT.md](./DEVELOPMENT.md) — como rodar, estrutura e plano de implementação
-- [UX.md](./UX.md) — diretrizes de UX e interações para o resumo com streaming
+- [ARCHITECTURE.md](./ARCHITECTURE.md) — architecture view and plans for the summary feature
+- [DEVELOPMENT.md](./DEVELOPMENT.md) — how to run, structure, and implementation plan
+- [UX.md](./UX.md) — UX guidelines and interactions for streaming summary
 
-Ordem sugerida de leitura: Architecture → UX → Development.
+Suggested reading order: Architecture → UX → Development.
