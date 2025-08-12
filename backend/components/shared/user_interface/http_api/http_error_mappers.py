@@ -5,16 +5,19 @@ from marshmallow import ValidationError as MarshmallowValidationError
 from pydantic import ValidationError as PydanticValidationError
 
 from components.shared.application.errors import ApplicationError
-from components.shared.domain.errors import AuthorizationError
-from components.shared.domain.errors import DomainError, EntityNotFound
+from components.shared.domain.errors import (
+    AuthorizationError,
+    DomainError,
+    EntityNotFound,
+)
 from components.shared.infrastructure.errors import NoConfigForTenant
 from components.shared.user_interface.errors import ResourceNotFound
 
 from .http_error_handlers import (
     application_error_handler,
+    authorization_error_handler,
     generic_error_handler,
     resource_not_found_handler,
-    authorization_error_handler
 )
 
 

@@ -1,13 +1,17 @@
+import json
+import os
+import time
 from uuid import UUID
-from flask import Blueprint, Response, stream_with_context, request, jsonify, g
-import json, time, os
-from components.summary.user_interface.bus import bus_factory
-from components.summary.domain import commands
-from components.shared.user_interface.utils import parse_with_for_http
-from components.summary.user_interface.http import schemas
-from components.summary.application.summary_service import SummaryService
-from components.summary.application.providers import ProviderStreamError
+
+from flask import Blueprint, Response, g, jsonify, request, stream_with_context
+
 from components.shared.infrastructure.errors import NoConfigForTenant
+from components.shared.user_interface.utils import parse_with_for_http
+from components.summary.application.providers import ProviderStreamError
+from components.summary.application.summary_service import SummaryService
+from components.summary.domain import commands
+from components.summary.user_interface.bus import bus_factory
+from components.summary.user_interface.http import schemas
 
 summary_blueprint = Blueprint("summary", __name__, url_prefix="/api/documents")
 DATA_PREFIX = "data: "

@@ -5,14 +5,14 @@ Revises: f3b9c4319171
 Create Date: 2025-07-12 17:45:22.321264
 
 """
-from alembic import op
+
 import sqlalchemy as sa
+from alembic import op
 from sqlalchemy import text
 
-
 # revision identifiers, used by Alembic.
-revision = 'e49b9875d4cb'
-down_revision = 'f3b9c4319171'
+revision = "e49b9875d4cb"
+down_revision = "f3b9c4319171"
 branch_labels = None
 depends_on = None
 
@@ -90,14 +90,20 @@ def upgrade() -> None:
     
     <p>This apartment offers the perfect balance of comfort and convenience in a prime downtown location. The building is well-maintained and offers excellent amenities for modern living.</p>
     """
-    
+
     # Insert the sample document
-    op.execute(text("""
+    op.execute(
+        text(
+            """
         INSERT INTO documents (id, title, content_html, created_at) 
         VALUES ('550e8400-e29b-41d4-a716-446655440000', 'Downtown 2BR Apartment Rental Agreement', :content_html, NOW())
-    """).bindparams(content_html=sample_document_content.strip()))
+    """
+        ).bindparams(content_html=sample_document_content.strip())
+    )
 
 
 def downgrade() -> None:
     # Remove the sample document
-    op.execute(text("DELETE FROM documents WHERE id = '550e8400-e29b-41d4-a716-446655440000'"))
+    op.execute(
+        text("DELETE FROM documents WHERE id = '550e8400-e29b-41d4-a716-446655440000'")
+    )

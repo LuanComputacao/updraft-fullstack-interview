@@ -73,9 +73,7 @@ class FlaskStructuredFormatter(Formatter):
 
 
 def logger_format_factory():
-    if (
-        os.getenv("APP_ENV", "production") == "development"
-    ):
+    if os.getenv("APP_ENV", "production") == "development":
         return FlaskStructuredFormatter(fmt="%(message)s - %(asctime)s")
     else:
         return FlaskUnstructuredFormatter(
@@ -87,7 +85,8 @@ def get_logger():
     _logger = logging.getLogger("updraft-backend")
     if not _logger.handlers:
         logger_level = os.getenv(
-            "LOG_LEVEL", "WARNING" if os.getenv("APP_ENV", "production") == "production" else "INFO"
+            "LOG_LEVEL",
+            "WARNING" if os.getenv("APP_ENV", "production") == "production" else "INFO",
         )
         handler = StreamHandler()
         handler.setFormatter(logger_format_factory())

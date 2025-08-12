@@ -1,7 +1,7 @@
 import logging
 from typing import Tuple
 
-from flask import Response, jsonify, request, g, has_request_context
+from flask import Response, g, has_request_context, jsonify, request
 
 logger = logging.getLogger()
 

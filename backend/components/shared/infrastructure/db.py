@@ -21,7 +21,9 @@ class TenantAwareSessionFactory(sessionmaker):
     def __call__(self, **kwargs):
         # Call get_postgres_uri() to get the URI for the current tenant
         uri = get_postgres_uri()
-        engine = create_engine(uri, isolation_level="REPEATABLE READ", poolclass=NullPool)
+        engine = create_engine(
+            uri, isolation_level="REPEATABLE READ", poolclass=NullPool
+        )
 
         # Bind the engine to the session's configuration
         kwargs["bind"] = engine

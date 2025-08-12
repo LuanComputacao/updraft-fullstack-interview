@@ -1,6 +1,8 @@
-from components.shared.domain.base import Command
-from pydantic import constr
 import uuid
+
+from pydantic import constr
+
+from components.shared.domain.base import Command
 
 
 class SaveSummary(Command):

@@ -1,27 +1,28 @@
-from flask import Flask, g, request, Response, stream_with_context
-from flask_compress import Compress
-from flask_cors import CORS
-from flask_restx import Api, Resource, Namespace, fields
 from typing import List
 from uuid import uuid4
-from components.shared.infrastructure.os import env
-from components.shared.user_interface.http_api.http_error_mappers import (
-    register_error_handlers,
-    ErrorToHandlerMap,
-    get_error_to_handler_mappers,
-)
+
+from flask import Flask, Response, g, request, stream_with_context
+from flask_compress import Compress
+from flask_cors import CORS
+from flask_restx import Api, Namespace, Resource, fields
+
 from components.documents.infrastructure.orm import (
     start_mappers as start_documents_mappers,
 )
 from components.documents.user_interface.http.documents_api import documents_blueprint
-from components.summary.user_interface.http.summary_api import summary_blueprint
-
 from components.shared.infrastructure.logger import logger
+from components.shared.infrastructure.os import env
 from components.shared.infrastructure.tenant import (
-    set_current_tenant,
     get_tenant_from_http_request,
     get_tenant_from_path,
+    set_current_tenant,
 )
+from components.shared.user_interface.http_api.http_error_mappers import (
+    ErrorToHandlerMap,
+    get_error_to_handler_mappers,
+    register_error_handlers,
+)
+from components.summary.user_interface.http.summary_api import summary_blueprint
 
 IS_DEV = env.bool("IS_LOCAL_ENV", False)
 
@@ -100,8 +101,9 @@ class DocumentResource(Resource):
     @documents_ns.marshal_with(document_model)
     def get(self, document_id):
         from uuid import UUID
-        from components.documents.user_interface.bus import bus_factory
+
         from components.documents.application import views
+        from components.documents.user_interface.bus import bus_factory
 
         bus = bus_factory()
         with bus.uow as uow:
@@ -112,9 +114,10 @@ class DocumentResource(Resource):
     @documents_ns.marshal_with(document_model)
     def put(self, document_id):
         from uuid import UUID
+
+        from components.documents.application import views
         from components.documents.domain import commands
         from components.documents.user_interface.bus import bus_factory
-        from components.documents.application import views
 
         payload = request.get_json()
         bus = bus_factory()
@@ -131,6 +134,7 @@ class DocumentResource(Resource):
 
     def delete(self, document_id):
         from uuid import UUID
+
         from components.documents.domain import commands
         from components.documents.user_interface.bus import bus_factory
 
@@ -145,6 +149,7 @@ class SummaryResource(Resource):
     @summaries_ns.marshal_with(summary_model)
     def get(self, document_id):
         from uuid import UUID
+
         from components.summary.user_interface.bus import bus_factory
 
         bus = bus_factory()
@@ -158,6 +163,7 @@ class SummaryResource(Resource):
     @summaries_ns.expect(summary_save_model)
     def post(self, document_id):
         from uuid import UUID
+
         from components.summary.domain import commands as scmd
         from components.summary.user_interface.bus import bus_factory
 
@@ -173,6 +179,7 @@ class SummaryResource(Resource):
     @summaries_ns.expect(summary_save_model)
     def put(self, document_id):
         from uuid import UUID
+
         from components.summary.domain import commands as scmd
         from components.summary.user_interface.bus import bus_factory
 
@@ -187,6 +194,7 @@ class SummaryResource(Resource):
 
     def delete(self, document_id):
         from uuid import UUID
+
         from components.summary.domain import commands as scmd
         from components.summary.user_interface.bus import bus_factory
 
@@ -201,6 +209,7 @@ class SummaryResource(Resource):
 class SummaryStream(Resource):
     def post(self, document_id: str):
         from uuid import UUID
+
         from components.summary.user_interface.http.summary_api import stream_summary
 
         return stream_summary(UUID(document_id))

@@ -1,5 +1,4 @@
-from marshmallow import Schema
-from marshmallow import fields
+from marshmallow import Schema, fields
 
 
 class Document(Schema):

@@ -1,4 +1,5 @@
 import threading
+
 from flask import Request
 
 from components.shared.application.base import TenantResolverInterface

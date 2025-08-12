@@ -2,6 +2,7 @@ import abc
 import uuid
 from types import SimpleNamespace
 from typing import Generator, List, Union
+
 from sqlalchemy.orm import Session
 
 from components.shared.domain.base import Command, Event
@@ -41,4 +42,3 @@ class SecretManagerInterface(abc.ABC):
     @abc.abstractmethod
     def get_tenant_secrets(self) -> dict:
         raise NotImplementedError
-

@@ -1,14 +1,15 @@
-from components.shared.application.message_bus import MessageBus
 import inspect
 from typing import Callable, Union
-from components.shared.application.base import UnitOfWorkInterface
-from components.shared.domain.base import LoggerInterface
-from components.shared.infrastructure.sqlalchemy_base import SqlAlchemyUnitOfWork
-from components.shared.infrastructure.logger import logger as default_logger
+
 from components.documents.infrastructure import repositories as doc_repositories
+from components.shared.application.base import UnitOfWorkInterface
+from components.shared.application.message_bus import MessageBus
+from components.shared.domain.base import LoggerInterface
+from components.shared.infrastructure.logger import logger as default_logger
+from components.shared.infrastructure.sqlalchemy_base import SqlAlchemyUnitOfWork
 from components.summary.application.handler_maps import (
-    EVENT_HANDLER_MAPS,
     COMMAND_HANDLER_MAPS,
+    EVENT_HANDLER_MAPS,
 )
 
 

@@ -1,12 +1,13 @@
 import json
 from typing import Optional
+
 from environs import EnvError
 
 from components.shared.application.base import SecretManagerInterface
 from components.shared.infrastructure import errors
 from components.shared.infrastructure.logger import logger
-from components.shared.infrastructure.tenant import TenantResolver
 from components.shared.infrastructure.os import env
+from components.shared.infrastructure.tenant import TenantResolver
 
 
 class SecretsManager(SecretManagerInterface):
@@ -23,7 +24,8 @@ class SecretsManager(SecretManagerInterface):
             return json.loads(secret_env_var)
         except EnvError as err:
             logger.exception(
-                f"Hiding secret manager error: {err}", exc_info=err.__traceback__)
+                f"Hiding secret manager error: {err}", exc_info=err.__traceback__
+            )
             raise errors.NoConfigForTenant(tenant_name=tenant)
 
     def get_tenant_secrets(self) -> dict:
@@ -39,5 +41,6 @@ class SecretsManager(SecretManagerInterface):
             if default is not None:
                 return default
             raise
+
 
 secrets_manager = SecretsManager()

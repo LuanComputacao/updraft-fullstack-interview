@@ -2,9 +2,9 @@ import os
 import time
 from typing import Iterable, Optional
 
+from components.shared.infrastructure.errors import NoConfigForTenant
 from components.shared.infrastructure.logger import logger
 from components.shared.infrastructure.secrets_manager import secrets_manager
-from components.shared.infrastructure.errors import NoConfigForTenant
 from components.shared.infrastructure.tenant import get_current_tenant
 from components.summary.application.prompts import (
     SYSTEM_INSTRUCTION_HTML,

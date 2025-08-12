@@ -1,6 +1,8 @@
-from functools import wraps
-from flask import request
 import json
+from functools import wraps
+
+from flask import request
+
 
 def parse_with_for_http(schema, **kwargs):
     """Decorator used to parse json input using the specified schema
