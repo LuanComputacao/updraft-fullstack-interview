@@ -16,7 +16,7 @@ COPY . .
 
 FROM base AS development
 ENV HOST=0.0.0.0
-EXPOSE 5173
+EXPOSE 5180
 CMD ["npm","run","dev"]
 
 FROM base AS build
