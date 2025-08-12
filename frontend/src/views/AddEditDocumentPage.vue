@@ -11,15 +11,15 @@
       />
       <h1>{{ isEditMode ? 'Edit Document' : 'Create Document' }}</h1>
     </div>
-    <div class="flex w-full gap-3">
-      <div class="flex-1 bg-white p-3 shadow-2 border-round">
+    <div class="flex w-full gap-3 flex-column lg:flex-row">
+      <div class="bg-white p-3 shadow-2 border-round col-12 lg:col-7">
         <DocumentForm
           :document-id="documentId"
           :is-edit-mode="isEditMode"
           @created="onDocumentCreated"
         />
       </div>
-      <div v-if="isEditMode" class="bg-white p-3 shadow-2 border-round">
+      <div v-if="isEditMode" class="bg-white p-3 shadow-2 border-round col-12 lg:col-5">
         <SummaryPanel :document-id="documentId" />
       </div>
     </div>

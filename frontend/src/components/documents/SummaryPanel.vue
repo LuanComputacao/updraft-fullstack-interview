@@ -1,8 +1,9 @@
 <template>
-  <aside class="summary-panel">
-    <div class="header">
-      <h3 class="m-0">AI Summary</h3>
-      <div class="actions">
+  <aside class="summary-panel p-1">
+    <div class="flex flex-column flex-wrap align-items-center">
+      <h3 class="m-0 mb-5">AI Summary</h3>
+
+      <div class="flex gap-5 mb-5">
         <Button label="Generate" size="small" :disabled="isGenerating" @click="onGenerate" />
         <Button label="Save" size="small" severity="success" :disabled="!canSave" @click="onSave" />
         <Button
@@ -15,18 +16,18 @@
       </div>
     </div>
 
-    <div v-if="state === 'idle'" class="state idle">
-      <p>Generate an AI summary for this document. You can edit before saving.</p>
-    </div>
-
-    <div v-if="state === 'generating'" class="state generating" aria-live="polite">
+    <div
+      v-if="state === 'generating'"
+      class="flex flex-column justify-content-center align-items-center p-3 border-round mb-3"
+      aria-live="polite"
+    >
       <p class="text-500 flex align-items-center gap-2">
         <i class="pi pi-spin pi-spinner" />
         Generating summary…
       </p>
       <Button
         v-if="isGenerating"
-        label="Cancel"
+        label="Stop"
         size="small"
         severity="secondary"
         @click="onCancel"
@@ -41,6 +42,10 @@
         {{ hasSummary ? 'Edit your summary below:' : 'No summary generated yet.' }}
       </p>
       <RichTextEditor v-model="summaryHtml" placeholder="The summary will appear here..." />
+    </div>
+
+    <div v-if="state === 'idle'" class="small text-500 mt-3 text-center" aria-live="polite">
+      <p>Generate an AI summary for this document. You can edit before saving.</p>
     </div>
   </aside>
 </template>
@@ -149,30 +154,11 @@ const onDelete = async () => {
 </script>
 
 <style scoped>
-.summary-panel {
-  width: 380px;
-  padding: 0.75rem;
-}
-.header {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
-}
-
-.actions {
-  display: flex;
-  gap: 0.5rem;
-}
-
 .editor {
   margin-top: 0.5rem;
   flex-grow: 1;
 }
-.state.generating {
-  min-height: 2rem;
-}
+
 .text-red-500 {
   color: #ef4444;
 }
