@@ -1,6 +1,6 @@
 import os
 import time
-from typing import Iterable
+from typing import Iterable, Optional
 
 from components.shared.infrastructure.logger import logger
 from components.shared.infrastructure.secrets_manager import secrets_manager
@@ -35,7 +35,7 @@ class MockProvider(SummaryProvider):
                 yield chunk
 
 
-def _tenant_secret(keys: list[str]) -> str | None:
+def _tenant_secret(keys: list[str]) -> Optional[str]:
     try:
         tenant_secrets = secrets_manager.get_tenant_secrets() or {}
     except Exception:
@@ -47,7 +47,7 @@ def _tenant_secret(keys: list[str]) -> str | None:
     return None
 
 
-def _resolve_api_key() -> str | None:
+def _resolve_api_key() -> Optional[str]:
     # Prefer tenant-specific, then shared secret, then environment
     return (
         _tenant_secret(["GEMINI_API_KEY", "LLM_GOOGLE_API_KEY"])
@@ -56,7 +56,7 @@ def _resolve_api_key() -> str | None:
     )
 
 
-def _resolve_model() -> str | None:
+def _resolve_model() -> Optional[str]:
     # Model can come from tenant or env; provider will still apply a default if None
     return _tenant_secret(["LLM_GOOGLE_MODEL", "LLM_MODEL"]) or os.getenv(
         "LLM_GOOGLE_MODEL"
@@ -64,7 +64,7 @@ def _resolve_model() -> str | None:
 
 
 class GeminiProvider(SummaryProvider):
-    def __init__(self, api_key: str | None = None, model: str | None = None):
+    def __init__(self, api_key: Optional[str] = None, model: Optional[str] = None):
         self._use_new = False
         self._model_name = model or os.getenv("LLM_GOOGLE_MODEL")
         self._attempts = max(1, int(os.getenv("LLM_RETRY_ATTEMPTS", "2")))
@@ -159,7 +159,7 @@ class GeminiProvider(SummaryProvider):
         )
 
     def _stream_with_new_client(self, prompt: str) -> Iterable[str]:
-        last_err: Exception | None = None
+        last_err: Optional[Exception] = None
         for attempt in range(self._attempts):
             try:
                 resp = self._request_new_client(prompt)
@@ -179,7 +179,7 @@ class GeminiProvider(SummaryProvider):
         raise ProviderStreamError(str(last_err) if last_err else "LLM request failed")
 
     def _stream_with_legacy(self, prompt: str) -> Iterable[str]:
-        last_err: Exception | None = None
+        last_err: Optional[Exception] = None
         for attempt in range(self._attempts):
             try:
                 stream = self._model.generate_content(prompt, stream=True)
