@@ -196,6 +196,7 @@ class SummaryResource(Resource):
 
 
 # Streaming endpoint via RESTX delegando implementação existente
+# Streaming endpoint via RESTX delegating existing implementation
 @summaries_ns.route("/<string:document_id>/summary/stream")
 class SummaryStream(Resource):
     def post(self, document_id: str):
@@ -241,10 +242,7 @@ def start_mappers() -> None:
     start_documents_mappers()
 
 
-def create_app(
-    import_name: str,
-    auto_load_blueprints: bool = False,
-) -> Flask:
+def create_app(import_name: str) -> Flask:
     flask_app = Flask(import_name)
     api = Api(
         flask_app,
@@ -254,13 +252,9 @@ def create_app(
         doc="/swagger/",
     )
 
-    # Registrar namespaces RESTX (substitui blueprints para documentação)
+    # Register RESTX namespaces (replaces blueprints for documentation)
     api.add_namespace(documents_ns)
     api.add_namespace(summaries_ns)
-
-    # Não registrar blueprints para evitar conflito de rotas duplicadas
-    # if auto_load_blueprints:
-    #     register_blueprints(flask_app)
 
     start_mappers()
 
