@@ -8,17 +8,19 @@ COPY nginx.conf /etc/nginx/nginx.conf
 COPY default.conf /etc/nginx/conf.d/default.conf.template
 
 RUN apt-get update \
-  && apt-get install -y dumb-init
+  && apt-get install -y dumb-init \
+  && rm -rf /var/lib/apt/lists/*
 
 FROM base AS development
 
-ENV NGINX_PUBLIC_PORT=8080
-ENV FRONTEND_HOST="172.17.0.1:5180/"
-ENV API_HOST="backend:3003/api"
+ENV NGINX_PUBLIC_PORT=8080 \
+    FRONTEND_HOST="frontend:5180" \
+    API_HOST="backend:3003"
 
-RUN envsubst '$FRONTEND_HOST $API_HOST $NGINX_PUBLIC_PORT' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf
-RUN cat /etc/nginx/conf.d/default.conf
-RUN env
+RUN set -eux; \
+  envsubst '$FRONTEND_HOST $API_HOST $NGINX_PUBLIC_PORT' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf; \
+  grep proxy_pass /etc/nginx/conf.d/default.conf || true; \
+  env | grep -E 'FRONTEND_HOST|API_HOST|NGINX_PUBLIC_PORT'
 
 ENTRYPOINT ["dumb-init", "--"]
 CMD ["bash", "-c", "exec nginx"]

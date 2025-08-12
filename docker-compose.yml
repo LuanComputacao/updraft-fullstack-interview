@@ -57,7 +57,7 @@ services:
       target: development
     environment:
       - FRONTEND_HOST=frontend:5180
-      - API_HOST=backend:3003/api
+      - API_HOST=backend:3003
     depends_on:
       - frontend
       - backend
